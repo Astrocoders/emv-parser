@@ -89,5 +89,8 @@ const treeToObject = tree => {
   };
 };
 
+const parseAndFormat = emv => treeToObject(parser.run(emv).result)
+
 module.exports.parser = parser
 module.exports.treeToObject = treeToObject
+module.exports.parseAndFormat = parseAndFormat
