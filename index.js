@@ -23,7 +23,7 @@ const tlvParser = (config) => idParser.chain(id => {
       return A.coroutine(function* () {
         const length = yield A.sequenceOf(
           times(config.unreservedLength, () => A.digit)
-        ).map(v => v.join(''));;
+        ).map(v => v.join(''));
 
         const transactionInformations = yield valueParser(length)
 
