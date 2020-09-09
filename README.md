@@ -37,7 +37,7 @@ console.log(parseWithTemplate(templates.cielo, emv))
 }
 ```
 
-Check out [index.test.js][./index.test.js] for more examples
+Check out [index.test.js][(./index.test.js) for more examples
 
 # Templates
 - Cielo
