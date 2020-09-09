@@ -10,26 +10,27 @@ const idParser = A.sequenceOf([
   A.digit,
 ]).map(v => v.join(''))
 
+const times = (n, fn) => Array.from({length: Number(n)}).map(fn)
+
 const valueParser = length => A.sequenceOf(
-  Array.from({length: Number(length)}).map(() => A.anyChar)
+  times(length, () => A.anyChar),
 ).map(v => v.join(''))
 
-const tlvParser = idParser.chain(id => {
+// make this better?
+const tlvParser = (config) => idParser.chain(id => {
   switch (id) {
     case '80':
       return A.coroutine(function* () {
-        const length = yield A.sequenceOf([
-          A.digit,
-          A.digit,
-          A.digit,
-        ]).map(v => v.join(''));;
+        const length = yield A.sequenceOf(
+          times(config.unreservedLength, () => A.digit)
+        ).map(v => v.join(''));;
 
         const transactionInformations = yield valueParser(length)
 
         return {
           id,
           length,
-          value: parser.run(transactionInformations)
+          value: parser(config).run(transactionInformations)
         }
       })
     case '26': return A.coroutine(function* () {
@@ -37,7 +38,7 @@ const tlvParser = idParser.chain(id => {
 
       const value = yield valueParser(length);
 
-      return {id, length, value: parser.run(value)}
+      return {id, length, value: parser(config).run(value)}
     })
     default:
       return A.coroutine(function* () {
@@ -50,47 +51,9 @@ const tlvParser = idParser.chain(id => {
   }
 })
 
-const parser = A.many(tlvParser)
+const parser = (config) => A.many(tlvParser(config))
 
-const getIdValue = (id, tree) => {
-  const field = tree.find(field => field.id === id)
-
-  return field ? field.value : null
-}
-
-const applyCieloTemplate = tree => {
-  const merchantAccountInformation = getIdValue("26", tree).result;
-  const transactionInformations = getIdValue("80", tree).result;
-
-  return {
-    payloadFormatIndicator: getIdValue('00', tree),
-    pointOfInitiationMethod: getIdValue("01", tree),
-    merchantAccountInformation: {
-      globallyUniqueIdentifier: getIdValue("00", merchantAccountInformation),
-      merchantAccountInformation: getIdValue("01", merchantAccountInformation),
-      logicNumber: getIdValue("02", merchantAccountInformation),
-    },
-    merchantCategory: getIdValue("52", tree),
-    transactionCurrency: getIdValue("53", tree),
-    transactionAmount: getIdValue("54", tree),
-    countryCode: getIdValue("58", tree),
-    merchantName: getIdValue("59", tree),
-    merchantCity: getIdValue("60", tree),
-    transactionInformations: {
-      globallyUniqueIdentifier: getIdValue("00", transactionInformations),
-      transactionId: getIdValue("01", transactionInformations),
-      transactionDate: getIdValue("02", transactionInformations),
-      mainProduct: getIdValue("03", transactionInformations),
-      subProduct: getIdValue("04", transactionInformations),
-      paymentInstallments: getIdValue("05", transactionInformations),
-      transactionType: getIdValue("06", transactionInformations),
-    },
-    crc: getIdValue("63", tree),
-  };
-};
-
-const parseAndFormat = emv => treeToObject(parser.run(emv).result)
+const parseWithTemplate = (template, emv) => template(parser, emv)
 
 module.exports.parser = parser
-module.exports.applyCieloTemplate = applyCieloTemplate
-module.exports.parseAndFormat = parseAndFormat
+module.exports.parseWithTemplate = parseWithTemplate
