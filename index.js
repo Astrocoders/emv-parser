@@ -58,7 +58,7 @@ const getIdValue = (id, tree) => {
   return field ? field.value : null
 }
 
-const treeToObject = tree => {
+const applyCieloTemplate = tree => {
   const merchantAccountInformation = getIdValue("26", tree).result;
   const transactionInformations = getIdValue("80", tree).result;
 
@@ -92,5 +92,5 @@ const treeToObject = tree => {
 const parseAndFormat = emv => treeToObject(parser.run(emv).result)
 
 module.exports.parser = parser
-module.exports.treeToObject = treeToObject
+module.exports.applyCieloTemplate = applyCieloTemplate
 module.exports.parseAndFormat = parseAndFormat
