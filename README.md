@@ -35,6 +35,29 @@ console.log(parseWithTemplate(templates.cielo, emv))
   },
   crc: '9872'
 }
+
+const pixStatic = `00020126440014BR.GOV.BCB.PIX0122FULANO2019 EXAMPLE.COM5204000053039865802BR5913FULANO DE TAL6008BRASILIA62410503***50300017BR.GOV.BCB.BRCODE01051.0.0630427E9`;
+
+console.log(parseWithTemplate(templates.pixStatic, pixStatic))
+// =>
+{
+  payloadFormatIndicator: '01',
+  pointOfInitiationMethod: null,
+  merchantAccountInformation: {
+    globallyUniqueIdentifier: 'BR.GOV.BCB.PIX',
+    pixKey: 'FULANO2019 EXAMPLE.COM'
+  },
+  merchantCategory: '0000',
+  transactionCurrency: '986',
+  transactionAmount: null,
+  countryCode: 'BR',
+  merchantName: 'FULANO DE TAL',
+  merchantCity: 'BRASILIA',
+  additionalData: { referenceLabel: null },
+  crc: '27E9'
+}
+
+
 ```
 
 Check out [index.test.js](./index.test.js) for more examples
