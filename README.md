@@ -1,4 +1,4 @@
-# emv-parser
+# emv-parser [WIP ⚠️!!!!]
 
 npm install emv-parser
 
@@ -74,3 +74,8 @@ We only parse the tree and we are not doing any fancy validations on it yet
 
 - [PIX](https://www.bcb.gov.br/content/estabilidadefinanceira/forumpireunioes/Anexo%20I%20-%20Padr%C3%B5es%20para%20Inicia%C3%A7%C3%A3o%20do%20PIX.pdf)
 - [Cielo](https://developercielo.github.io/manual/qrcode)
+
+
+# Known issues
+- Doesn't work in RN because of a dependency of https://github.com/francisrstokes/arcsecond
+- Probably not following the correct specification of how to parse an EMV because it was made in sanic mode
