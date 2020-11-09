@@ -77,5 +77,5 @@ We only parse the tree and we are not doing any fancy validations on it yet
 
 
 # Known issues
-- Doesn't work in RN because of a dependency of https://github.com/francisrstokes/arcsecond
+- Doesn't work on RN because of a dependency of https://github.com/francisrstokes/arcsecond
 - Probably not following the correct specification of how to parse an EMV because it was made in sanic mode
