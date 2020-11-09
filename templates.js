@@ -78,7 +78,7 @@ module.exports.pixDynamic = (parser, emv) => {
   const tree = parser(config).run(emv).result
   const merchantAccountInformation = getIdValue("26", tree).result;
   const additionalData = getIdValue("62", tree).result;
-  const unreserved = getIdValue("80", tree).result;
+  const unreserved = (getIdValue("80", tree) || {result: []}).result;
 
   return {
     payloadFormatIndicator: getIdValue('00', tree),
